@@ -1,0 +1,54 @@
+.ButtonXLarge {
+  --button-border-radius: 5px;
+  --button-orange: #a53a01;
+  --button-green: #0c501c;
+  --button-font-weight: 600;
+  --button-font-size: 15px;
+  --button-line-height: 21px;
+  --button-padding: 10px 16px;
+}
+
+.ButtonXLarge {
+  border-radius: var(--button-border-radius);
+  cursor: pointer;
+  display: inline-block;
+  -webkit-border-radius: var(--button-border-radius);
+  -moz-border-radius: var(--button-border-radius);
+  -ms-border-radius: var(--button-border-radius);
+  -o-border-radius: var(--button-border-radius);
+  min-height: 30px;
+  height: 42px;
+  text-transform: none;
+  font: normal normal 600 15px/21px Source Serif Pro;
+}
+
+.ButtonXLarge--orange {
+  border: 1px solid var(--button-orange);
+  color: white;
+  background-color: var(--button-orange);
+}
+
+.ButtonXLarge--orange:hover {
+  background-color: var(--button-orange);
+}
+
+.ButtonXLarge--green {
+  /* border: 1px solid var(--button-green); */
+  color: white;
+  background-color: var(--button-green);
+}
+
+.ButtonXLarge--green:hover {
+  background-color: var(--button-green);
+}
+
+.ButtonXLarge--default {
+  font-weight: var(--button-font-weight);
+  font-size: var(--button-font-size);
+  line-height: var(--button-line-height);
+  padding: var(--button-padding);
+}
+
+.ButtonXLarge--fullwidth {
+  width: 100%;
+}

@@ -1,0 +1,67 @@
+.task-page {
+  background-color: pink;
+  padding-top: 40px;
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+.task-page__container {
+  background-color: yellow;
+  height: 400px;
+  border: 1.2px solid gray;
+  border-radius: 10px 10px 0 0;
+}
+
+.task-page__header {
+  height: 60px;
+  min-height: 60px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  padding-left: 20px;
+  padding-right: 20px;
+  justify-content: space-between;
+  border-radius: inherit;
+}
+
+.task-page__title {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.task-page__accordion-summary {
+  display: flex;
+  justify-content: space-between;
+  background-color: pink;
+  flex: 1;
+  padding-right: 50px;
+}
+
+.task-page__accordion-details {
+  display: flex;
+  flex-direction: row;
+}
+
+.task-page__details-content {
+  flex-grow: 1;
+  background-color: grey;
+}
+
+.task-page__details-content__description {
+  font-size: 14px;
+}
+
+.task-page__details-content__date {
+  font: normal normal 300 10px/14px Source Serif Pro;
+}
+
+.task-page__actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  gap: 20px;
+  align-items: flex-end;
+  background-color: blue;
+}

@@ -1,0 +1,75 @@
+.ButtonSmall {
+  --button-border-radius: 5px;
+  --button-orange: #a53a01;
+  --button-green: #0c501c;
+  --button-mildGreen: #008d4c;
+  --button-gray: #e9edf2;
+  --button-white: #ffffff;
+
+  border-radius: var(--button-border-radius);
+  cursor: pointer;
+  text-transform: none;
+
+  color: white;
+  border: 1px solid #e9edf2;
+  box-shadow: none; /* Remove shadow */
+  padding: 0; /* Remove extra padding */
+  transition: background-color 0.3s ease;
+}
+
+.ButtonSmall--orange {
+  background-color: var(--button-orange);
+}
+
+.ButtonSmall--orange:hover {
+  background-color: var(--button-orange);
+}
+
+.ButtonSmall--green {
+  background-color: var(--button-green);
+}
+
+.ButtonSmall--green:hover {
+  background-color: var(--button-green);
+}
+
+.ButtonSmall--mildGreen {
+  background-color: var(--button-mildGreen);
+}
+
+.ButtonSmall--mildGreen:hover {
+  background-color: var(--button-mildGreen);
+}
+
+.ButtonSmall--white {
+  background-color: var(--button-white);
+  color: black; /* Add color for contrast */
+}
+
+.ButtonSmall--white:hover {
+  background-color: var(--button-white);
+}
+
+.ButtonSmall--gray {
+  background-color: var(--button-gray);
+  color: black; /* Add color for contrast */
+}
+
+.ButtonSmall--gray:hover {
+  background-color: var(--button-gray);
+}
+
+.ButtonSmall--transparent {
+  background-color: inherit;
+  color: black; /* Add color for contrast */
+  border: none;
+  transition: none; /* Disable animation */
+}
+
+.ButtonSmall--transparent:hover,
+.ButtonSmall--transparent:active,
+.ButtonSmall--transparent:focus {
+  background-color: inherit;
+  border: none;
+  transition: none; /* Disable animation */
+}
