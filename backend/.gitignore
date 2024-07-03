@@ -11,7 +11,7 @@ fastapi-env/
 # alembic/versions/
 
 # Environment variables
-.env
+# .env
 
 # VS Code settings
 .vscode/
