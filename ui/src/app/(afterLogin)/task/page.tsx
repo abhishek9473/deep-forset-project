@@ -1,26 +1,123 @@
 "use client";
 
-import { Button, Dialog, Divider, Stack } from "@mui/material";
-import React from "react";
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import Typography from "@mui/material/Typography";
-import { ExpendMoreIcons } from "@/components/icons";
-import { ButtonSmall, CreateTaskForm } from "@/components/common";
+import React, { useEffect, useState } from "react";
 import {
+  Dialog,
+  DialogContent,
+  Divider,
+  Stack,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Typography,
+  CircularProgress,
+  Snackbar,
+  Alert,
+} from "@mui/material";
+import { ExpendMoreIcons } from "@/components/icons";
+import {
+  ButtonSmall,
   ButtonType,
+  CreateTaskForm,
   SmallButtonColor,
-} from "@/components/common/buttons/AllButtonProps";
+  UpdateTaskForm,
+} from "@/components/common";
 import styles from "./TaskPage.module.css";
+import { ApiResponse } from "@/types/apiResponse";
+import {
+  NewTaskDataInterface,
+  createNewTask,
+  getAllTasks,
+} from "@/services/endPoints/TodoUrl";
+
+interface Task {
+  id: number;
+  name: string;
+  description: string;
+}
 
 const TaskPage: React.FC = () => {
-  const [expanded, setExpanded] = React.useState<string | false>(false);
+  const [expanded, setExpanded] = useState<string | false>(false);
+  const [userAllTasks, setUserAllTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [message, setMessage] = useState<string>("");
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  );
+  const [addFormDialogOpen, setAddFormDialogOpen] = useState<boolean>(false);
+  const [updateFormDialogOpen, setUpdateFormDialogOpen] =
+    useState<boolean>(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
+  const [refresh, setrefresh] = useState(true);
+
+  
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response: ApiResponse<Task[]> = await getAllTasks();
+        if (response.status) {
+          setUserAllTasks(response.entity || []);
+        } else {
+          setMessage("Failed to fetch tasks: " + response.message);
+          setSnackbarSeverity("error");
+          setSnackbarOpen(true);
+        }
+      } catch (error: any) {
+        setMessage(
+          "An error occurred: " +
+            (error.response?.data?.message || error.message)
+        );
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTasks();
+  }, [refresh]);
+
+  // for task add
+  const addTaskHandler = async (data: NewTaskDataInterface) => {
+    try {
+      const response = await createNewTask(data);
+      if (response.status) {
+        handleDialogClose();
+        setMessage("Task Added");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+        setrefresh((i) => !i);
+      } else {
+        setMessage("Failed to add tasks " + response.message);
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+      }
+    } catch (error: any) {
+      setMessage(
+        "An error occurred: " + (error.response?.data?.message || error.message)
+      );
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
     };
+
+  const handleDialogOpen = () => setAddFormDialogOpen(true);
+
+  const handleDialogClose = () => {
+    setAddFormDialogOpen(false);
+  };
 
   return (
     <>
@@ -31,64 +128,118 @@ const TaskPage: React.FC = () => {
               All Tasks
             </Typography>
             <ButtonSmall
-              label="ok"
+              label="Add Task"
               colorVarient={SmallButtonColor.MildGreen}
               types={ButtonType.Button}
+              onClick={handleDialogOpen}
             />
           </Stack>
           <Divider />
-          <Stack>
-            <Accordion
-              expanded={expanded === "panel"}
-              onChange={handleChange("panel")}
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <Stack
+              sx={{
+                maxHeight: "350px",
+                overflowY: "scroll",
+                scrollbarWidth: "none",
+              }}
             >
-              <AccordionSummary
-                expandIcon={<ExpendMoreIcons />}
-                aria-controls="panel1bh-content"
-                id="panel1bh-header"
-              >
-                <Stack className={styles["task-page__accordion-summary"]}>
-                  <Typography>Task 1</Typography>
-                  <Typography>status</Typography>
-                </Stack>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Stack className={styles["task-page__accordion-details"]}>
-                  <Stack className={styles["task-page__details-content"]}>
-                    <Typography
-                      className={
-                        styles["task-page__details-content__description"]
-                      }
-                    >
-                      task description
-                    </Typography>
-                    <Typography
-                      className={styles["task-page__details-content__date"]}
-                    >
-                      create date
-                    </Typography>
-                  </Stack>
-                  <Stack className={styles["task-page__actions"]}>
-                    <ButtonSmall label="ok" types={ButtonType.Button} />
-                    <ButtonSmall
-                      label="ok"
-                      colorVarient={SmallButtonColor.MildGreen}
-                      types={ButtonType.Button}
-                    />
-                  </Stack>
-                </Stack>
-              </AccordionDetails>
-            </Accordion>
-          </Stack>
+              {userAllTasks?.map((task) => (
+                <Accordion
+                  key={task.id}
+                  expanded={expanded === `panel${task.id}`}
+                  onChange={handleChange(`panel${task.id}`)}
+                >
+                  <AccordionSummary
+                    expandIcon={<ExpendMoreIcons />}
+                    aria-controls={`panel${task.id}bh-content`}
+                    id={`panel${task.id}bh-header`}
+                  >
+                    <Stack className={styles["task-page__accordion-summary"]}>
+                      <Typography>{task.name}</Typography>
+                      {/* <Typography>{task.status}</Typography> */}
+                    </Stack>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Stack className={styles["task-page__accordion-details"]}>
+                      <Stack className={styles["task-page__details-content"]}>
+                        <Typography
+                          className={
+                            styles["task-page__details-content__description"]
+                          }
+                        >
+                          {task.description}
+                        </Typography>
+                      </Stack>
+                      <Stack className={styles["task-page__actions"]}>
+                        <ButtonSmall label="Delete" types={ButtonType.Button} />
+                        <ButtonSmall
+                          onClick={() => console.log(task)}
+                          label="Update"
+                          colorVarient={SmallButtonColor.MildGreen}
+                          types={ButtonType.Button}
+                        />
+                      </Stack>
+                    </Stack>
+                  </AccordionDetails>
+                </Accordion>
+              ))}
+            </Stack>
+          )}
         </Stack>
       </Stack>
+
+      {/* for add task */}
       <Dialog
-        // onClose={handleClose}
+        onClose={handleDialogClose}
         aria-labelledby="customized-dialog-title"
-        open={true}
+        open={addFormDialogOpen}
+        PaperProps={{
+          style: {
+            backgroundColor: "white", // Change this to your desired background color
+          },
+        }}
       >
-        <CreateTaskForm />
+        <DialogContent>
+          <CreateTaskForm
+            onAddTask={(data) => addTaskHandler(data)}
+            onCancel={handleDialogClose}
+          />
+        </DialogContent>
       </Dialog>
+
+      {/* for update the task */}
+      <Dialog
+        onClose={handleDialogClose}
+        aria-labelledby="customized-dialog-title"
+        open={updateFormDialogOpen}
+        PaperProps={{
+          style: {
+            backgroundColor: "white", // Change this to your desired background color
+          },
+        }}
+      >
+        <DialogContent>
+          <UpdateTaskForm
+            onAddTask={(data) => console.log(data)}
+            onCancel={handleDialogClose}
+          />
+        </DialogContent>
+      </Dialog>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {message}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm import Session
+from sqlalchemy import desc
 from app import database
 from app.auth import create_access_token, get_password_hash, verify_password
 from app.middleware import validate_token
@@ -53,7 +54,7 @@ async def create_task(task: TaskCreate, request: Request, db: Session = Depends(
 async def read_tasks(request: Request, db: Session = Depends(database.get_db)):
     await validate_token(request)  # Validate the token here
     current_user = request.state.user  # Get the user ID from the request state
-    tasks = db.query(TaskModel).filter(TaskModel.user_id == current_user).all()
+    tasks = db.query(TaskModel).filter(TaskModel.user_id == current_user).order_by(desc(TaskModel.id)).all()  # Order by created_at in descending order
     return create_response(status=True, message="Tasks fetched successfully", entity=[Task.from_orm(task) for task in tasks])
 
 

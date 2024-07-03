@@ -1,9 +1,9 @@
 .ButtonSmall {
   --button-border-radius: 5px;
-  --button-orange: #a53a01;
-  --button-green: #0c501c;
-  --button-mildGreen: #008d4c;
-  --button-gray: #e9edf2;
+  --button-orange: #dc570f;
+  --button-green: #207f97;
+  --button-mildGreen: teal;
+  --button-gray: #c0c0c0;
   --button-white: #ffffff;
 
   border-radius: var(--button-border-radius);

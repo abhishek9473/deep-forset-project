@@ -1,15 +1,16 @@
 .task-page {
-  background-color: pink;
   padding-top: 40px;
   padding-left: 50px;
   padding-right: 50px;
 }
 
 .task-page__container {
-  background-color: yellow;
-  height: 400px;
+  /* max-height: 400px; */
   border: 1.2px solid gray;
-  border-radius: 10px 10px 0 0;
+  border-radius: 10px !important;
+  padding-bottom: 10px;
+  /* overflow-y: scroll; */
+  /* scrollbar-width: none; */
 }
 
 .task-page__header {
@@ -33,7 +34,6 @@
 .task-page__accordion-summary {
   display: flex;
   justify-content: space-between;
-  background-color: pink;
   flex: 1;
   padding-right: 50px;
 }
@@ -45,7 +45,6 @@
 
 .task-page__details-content {
   flex-grow: 1;
-  background-color: grey;
 }
 
 .task-page__details-content__description {
@@ -63,5 +62,4 @@
   flex-shrink: 0;
   gap: 20px;
   align-items: flex-end;
-  background-color: blue;
 }

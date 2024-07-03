@@ -49,7 +49,7 @@ const SignupPage: React.FC = () => {
     try {
       const res: ApiResponse<any> = await registerUser(data);
       if (res.status) {
-        setJwtInCookie(res.entity.token);
+        setJwtInCookie(res.entity.access_token);
         setMessage("Registration successful");
         setSnackbarSeverity("success");
         setSnackbarOpen(true);

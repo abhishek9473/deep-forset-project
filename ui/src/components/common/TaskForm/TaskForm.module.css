@@ -1,0 +1,41 @@
+.taskForm {
+  height: 300px;
+  width: 260px;
+  background-color: white;
+}
+
+.taskForm__header {
+  height: 30px;
+  text-align: center;
+  align-items: center;
+  background-color: teal;
+}
+
+.taskForm__title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: aliceblue;
+}
+
+.taskForm__body {
+  flex: 1;
+  padding-top: 20px;
+  gap: 20px;
+}
+
+.taskForm__description {
+  & textarea {
+    scrollbar-width: none; /* For Firefox */
+    -ms-overflow-style: none; /* For Internet Explorer and Edge */
+  }
+
+  & textarea::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Opera */
+  }
+}
+
+.taskForm__actions {
+  flex-direction: row;
+  gap: 10px;
+  justify-content: end;
+}

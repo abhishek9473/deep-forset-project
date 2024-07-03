@@ -5,7 +5,7 @@ import { ButtonSmall } from "../buttons";
 import { ButtonType, SmallButtonColor } from "../buttons/AllButtonProps";
 import styles from "./TaskForm.module.css"; // Import the CSS module
 
-interface CreateTaskFormProps {
+interface UpdateTaskFormProps {
   onAddTask: (formData: { name: string; description: string }) => void;
   onCancel: () => void;
 }
@@ -15,7 +15,7 @@ interface TaskFormInputs {
   description: string;
 }
 
-const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
+const UpdateTaskForm: React.FC<UpdateTaskFormProps> = ({
   onAddTask,
   onCancel,
 }) => {
@@ -36,7 +36,7 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
       className={styles.taskForm}
     >
       <Stack className={styles.taskForm__header}>
-        <Typography className={styles.taskForm__title}>New Task</Typography>
+        <Typography className={styles.taskForm__title}>Update Task</Typography>
       </Stack>
       <Stack className={styles.taskForm__body}>
         <TextField
@@ -67,7 +67,7 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
           onClick={onCancel}
         />
         <ButtonSmall
-          label="Add"
+          label="Update"
           colorVarient={SmallButtonColor.MildGreen}
           types={ButtonType.Submit}
         />
@@ -76,4 +76,4 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
   );
 };
 
-export default CreateTaskForm;
+export default UpdateTaskForm;

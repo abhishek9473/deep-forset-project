@@ -47,7 +47,7 @@ const LoginPage: React.FC = () => {
     try {
       const res: ApiResponse<any> = await loginUser(data);
       if (res.status) {
-        setJwtInCookie(res.entity.token);
+        setJwtInCookie(res.entity.access_token);
         setMessage("Login successful");
         setSnackbarSeverity("success");
         setSnackbarOpen(true);
