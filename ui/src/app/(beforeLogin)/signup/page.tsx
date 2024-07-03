@@ -1,3 +1,4 @@
+// components/SignupPage.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -7,11 +8,16 @@ import {
   Stack,
   TextField,
   Typography,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
 import styles from "../AuthForm.module.css"; // Import the shared CSS module
 import { registerUser } from "@/services/endPoints/authUrl";
+import { setJwtInCookie } from "@/services/cookie-handler";
+import { useRouter } from "next/navigation";
+import { ApiResponse } from "@/types/apiResponse";
 
 interface SignupFormInputs {
   name: string;
@@ -26,27 +32,44 @@ const SignupPage: React.FC = () => {
     formState: { errors },
   } = useForm<SignupFormInputs>();
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  );
 
-  //  // api call for all task data from database(sql by sequlize)
-  //  useEffect(() => {
-  //   getAllTasksAdminCall(userId)
-  //     .then((responce) => {
-  //       if (responce.status) {
-  //         setAllTasks(responce.entity);
-  //         setPageReady(true);
-  //       }
-  //     })
-  //     .catch((err) => console.log("error in get all tasks", err));
-  // }, [refreshtask, userId]);
+  const router = useRouter();
 
-  const handleSignup: SubmitHandler<SignupFormInputs> = (data) => {
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const handleSignup: SubmitHandler<SignupFormInputs> = async (data) => {
     setLoading(true);
-    console.log(data);
-    registerUser(data).then((res) => console.log("newuser-req", res));
-    // Simulate a network request
-    setTimeout(() => {
+    try {
+      const res: ApiResponse<any> = await registerUser(data);
+      if (res.status) {
+        setJwtInCookie(res.entity.token);
+        setMessage("Registration successful");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+        router.push("/task");
+      } else {
+        setMessage("Registration failed: " + res.message);
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+      }
+    } catch (error: any) {
+      console.error("Registration error", error);
+      setMessage(
+        "An error occurred during registration: " +
+          (error.response?.data?.message || error.message)
+      );
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
   };
 
   return (
@@ -98,6 +121,19 @@ const SignupPage: React.FC = () => {
           Already have an account? <Link href="/login">Login</Link>
         </Typography>
       </Stack>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {message}
+        </Alert>
+      </Snackbar>
     </Stack>
   );
 };

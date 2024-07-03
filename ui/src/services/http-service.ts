@@ -1,17 +1,19 @@
-import axiosInstance from "./axios-instance-service";
+// services/http-service.ts
+import customAxiosInterceptor from "./axios-instance-service";
 
 // Define a generic type for the response data
 type AxiosResponseData<T> = T;
 
 // Post
-export const post = <T>(url: string, entity: T): Promise<AxiosResponseData<T>> =>
+export const post = <T>(
+  url: string,
+  entity: any
+): Promise<AxiosResponseData<T>> =>
   new Promise((resolve, reject) => {
-    axiosInstance
+    customAxiosInterceptor
       .post<T>(url, entity)
       .then((response) => {
-        if (response && response.data) {
-          resolve(response.data);
-        }
+        resolve(response.data);
       })
       .catch((ex) => {
         reject(ex);
@@ -21,12 +23,10 @@ export const post = <T>(url: string, entity: T): Promise<AxiosResponseData<T>> =
 // Fetch
 export const get = <T>(url: string): Promise<AxiosResponseData<T>> =>
   new Promise((resolve, reject) => {
-    axiosInstance
+    customAxiosInterceptor
       .get<T>(url)
       .then((response) => {
-        if (response && response.data) {
-          resolve(response.data);
-        }
+        resolve(response.data);
       })
       .catch((ex) => {
         reject(ex);
@@ -34,16 +34,12 @@ export const get = <T>(url: string): Promise<AxiosResponseData<T>> =>
   });
 
 // Delete
-export const destroy = <T>(url: string, entity: T): Promise<AxiosResponseData<T>> =>
+export const destroy = <T>(url: string): Promise<AxiosResponseData<T>> =>
   new Promise((resolve, reject) => {
-    axiosInstance
-      .delete<T>(url, {
-        data: entity,
-      })
+    customAxiosInterceptor
+      .delete<T>(url)
       .then((response) => {
-        if (response && response.data) {
-          resolve(response.data);
-        }
+        resolve(response.data);
       })
       .catch((ex) => {
         reject(ex);
@@ -51,16 +47,19 @@ export const destroy = <T>(url: string, entity: T): Promise<AxiosResponseData<T>
   });
 
 // Update
-export const put = <T>(url: string, entity: T): Promise<AxiosResponseData<T>> =>
+export const put = <T>(
+  url: string,
+  entity: any
+): Promise<AxiosResponseData<T>> =>
   new Promise((resolve, reject) => {
-    axiosInstance
+    customAxiosInterceptor
       .put<T>(url, entity)
       .then((response) => {
-        if (response && response.data) {
-          resolve(response.data);
-        }
+        resolve(response.data);
       })
       .catch((ex) => {
         reject(ex);
       });
   });
+
+export default customAxiosInterceptor;

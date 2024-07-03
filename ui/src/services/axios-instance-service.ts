@@ -1,3 +1,4 @@
+// services/axios-instance-service.ts
 import axios, {
   AxiosResponse,
   AxiosError,
@@ -6,7 +7,6 @@ import axios, {
 import { getAuth } from "./identity";
 
 const url = process.env.NEXT_PUBLIC_API_URL as string;
-console.log("axax", url);
 
 const customAxiosInterceptor = axios.create({
   baseURL: url,
