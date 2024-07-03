@@ -5,7 +5,7 @@ from typing import List, Optional
 
 class TaskBase(BaseModel):
     name: str
-    discription: Optional[str] = None
+    description: Optional[str] = None
 
 class TaskCreate(TaskBase):
     pass

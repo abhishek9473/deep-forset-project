@@ -9,6 +9,6 @@ class Task(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
-    discription = Column(String)
+    description = Column(String)
     user_id = Column(Integer, ForeignKey('users.id'))
     owner = relationship("User", back_populates="tasks")
