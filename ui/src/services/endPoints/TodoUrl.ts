@@ -22,13 +22,13 @@ export const getAllTasks = (): Promise<ApiResponse<any>> => {
 
 // Update a task by ID
 export const updateTaskWithId = (
-  id: number,
+  taskId: number,
   newData: NewTaskDataInterface
 ): Promise<ApiResponse<any>> => {
-  return put<ApiResponse<any>>(API_ENDPOINTS.TASKS.UPDATE(id), newData);
+  return put<ApiResponse<any>>(API_ENDPOINTS.TASKS.UPDATE(taskId), newData);
 };
 
 // Delete a task by ID
-export const deleteTaskWithId = (id: number): Promise<ApiResponse<any>> => {
-  return destroy<ApiResponse<any>>(API_ENDPOINTS.TASKS.DELETE(id));
+export const deleteTaskWithId = (taskId: number): Promise<ApiResponse<any>> => {
+  return destroy<ApiResponse<any>>(API_ENDPOINTS.TASKS.DELETE(taskId));
 };

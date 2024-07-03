@@ -18,6 +18,7 @@ import { ExpendMoreIcons } from "@/components/icons";
 import {
   ButtonSmall,
   ButtonType,
+  ConfirmDelete,
   CreateTaskForm,
   SmallButtonColor,
   UpdateTaskForm,
@@ -27,7 +28,9 @@ import { ApiResponse } from "@/types/apiResponse";
 import {
   NewTaskDataInterface,
   createNewTask,
+  deleteTaskWithId,
   getAllTasks,
+  updateTaskWithId,
 } from "@/services/endPoints/TodoUrl";
 
 interface Task {
@@ -45,13 +48,14 @@ const TaskPage: React.FC = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
     "success"
   );
+  const [taskForUpdate, setTaskForUpdate] = useState<Task | null>(null);
+  const [taskIdForDelete, setTaskIdForDelete] = useState<number | null>(null);
   const [addFormDialogOpen, setAddFormDialogOpen] = useState<boolean>(false);
   const [updateFormDialogOpen, setUpdateFormDialogOpen] =
     useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [refresh, setrefresh] = useState(true);
 
-  
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -104,6 +108,61 @@ const TaskPage: React.FC = () => {
     }
   };
 
+  // for task update
+  const updateTaskHandler = async (data: {
+    taskId: number;
+    newTaskData: NewTaskDataInterface;
+  }) => {
+    try {
+      const response = await updateTaskWithId(data.taskId, data.newTaskData);
+      if (response.status) {
+        handleDialogClose();
+        setMessage("Task Updated");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+        setrefresh((i) => !i);
+      } else {
+        setMessage("Failed to add task " + response.message);
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+      }
+    } catch (error: any) {
+      setMessage(
+        "An error occurred: " + (error.response?.data?.message || error.message)
+      );
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // for task update
+  const deleteTaskHandler = async (taskId: number) => {
+    try {
+      const response = await deleteTaskWithId(taskId);
+      if (response.status) {
+        handleDialogClose();
+        setMessage("Task Deleted");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+        setrefresh((i) => !i);
+      } else {
+        setMessage("Failed to delete task " + response.message);
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+      }
+    } catch (error: any) {
+      setMessage(
+        "An error occurred: " + (error.response?.data?.message || error.message)
+      );
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
@@ -113,10 +172,10 @@ const TaskPage: React.FC = () => {
       setExpanded(isExpanded ? panel : false);
     };
 
-  const handleDialogOpen = () => setAddFormDialogOpen(true);
-
   const handleDialogClose = () => {
     setAddFormDialogOpen(false);
+    setDeleteDialogOpen(false);
+    setUpdateFormDialogOpen(false);
   };
 
   return (
@@ -131,7 +190,7 @@ const TaskPage: React.FC = () => {
               label="Add Task"
               colorVarient={SmallButtonColor.MildGreen}
               types={ButtonType.Button}
-              onClick={handleDialogOpen}
+              onClick={() => setAddFormDialogOpen(true)}
             />
           </Stack>
           <Divider />
@@ -173,9 +232,19 @@ const TaskPage: React.FC = () => {
                         </Typography>
                       </Stack>
                       <Stack className={styles["task-page__actions"]}>
-                        <ButtonSmall label="Delete" types={ButtonType.Button} />
                         <ButtonSmall
-                          onClick={() => console.log(task)}
+                          onClick={() => {
+                            setTaskIdForDelete(task.id);
+                            setDeleteDialogOpen(true);
+                          }}
+                          label="Delete"
+                          types={ButtonType.Button}
+                        />
+                        <ButtonSmall
+                          onClick={() => {
+                            setUpdateFormDialogOpen(true);
+                            setTaskForUpdate(task);
+                          }}
                           label="Update"
                           colorVarient={SmallButtonColor.MildGreen}
                           types={ButtonType.Button}
@@ -221,10 +290,33 @@ const TaskPage: React.FC = () => {
         }}
       >
         <DialogContent>
-          <UpdateTaskForm
-            onAddTask={(data) => console.log(data)}
-            onCancel={handleDialogClose}
-          />
+          {taskForUpdate && (
+            <UpdateTaskForm
+              initialValue={taskForUpdate}
+              onAddTask={(data) => updateTaskHandler(data)}
+              onCancel={handleDialogClose}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+      {/* for delete task confirmation */}
+      <Dialog
+        onClose={handleDialogClose}
+        aria-labelledby="customized-dialog-title"
+        open={deleteDialogOpen}
+        PaperProps={{
+          style: {
+            backgroundColor: "white", // Change this to your desired background color
+          },
+        }}
+      >
+        <DialogContent>
+          {taskIdForDelete && (
+            <ConfirmDelete
+              onCancelClick={handleDialogClose}
+              onDeleteClick={() => deleteTaskHandler(taskIdForDelete)}
+            />
+          )}
         </DialogContent>
       </Dialog>
       <Snackbar

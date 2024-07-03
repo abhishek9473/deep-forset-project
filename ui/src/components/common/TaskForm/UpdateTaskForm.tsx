@@ -1,12 +1,20 @@
 import { Stack, TextField, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { ButtonSmall } from "../buttons";
 import { ButtonType, SmallButtonColor } from "../buttons/AllButtonProps";
 import styles from "./TaskForm.module.css"; // Import the CSS module
 
 interface UpdateTaskFormProps {
-  onAddTask: (formData: { name: string; description: string }) => void;
+  initialValue: {
+    name: string;
+    description: string;
+    id: number;
+  };
+  onAddTask: (newData: {
+    taskId: number;
+    newTaskData: { name: string; description: string };
+  }) => void;
   onCancel: () => void;
 }
 
@@ -16,6 +24,7 @@ interface TaskFormInputs {
 }
 
 const UpdateTaskForm: React.FC<UpdateTaskFormProps> = ({
+  initialValue,
   onAddTask,
   onCancel,
 }) => {
@@ -23,10 +32,16 @@ const UpdateTaskForm: React.FC<UpdateTaskFormProps> = ({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TaskFormInputs>();
+  } = useForm<TaskFormInputs>({
+    defaultValues: {
+      name: initialValue.name,
+      description: initialValue.description,
+    },
+  });
 
   const onSubmit: SubmitHandler<TaskFormInputs> = (data) => {
-    onAddTask(data);
+    // onAddTask({initialValue.id, data});
+    onAddTask({ taskId: initialValue.id, newTaskData: data });
   };
 
   return (
