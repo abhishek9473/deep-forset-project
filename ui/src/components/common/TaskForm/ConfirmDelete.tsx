@@ -21,7 +21,7 @@ const ConfirmDelete: React.FC<DeleteConfirmProps> = ({
     >
       <Stack
         sx={{
-          bgcolor: "yellow",
+          bgcolor: "#a0a10e",
           border: "1px solid lightgray",
           borderRadius: "5px",
           height: "30px",
@@ -53,6 +53,7 @@ const ConfirmDelete: React.FC<DeleteConfirmProps> = ({
         <ButtonSmall
           label="Delete"
           types={ButtonType.Button}
+          colorVarient={SmallButtonColor.Orange}
           onClick={onDeleteClick}
         />
       </Stack>

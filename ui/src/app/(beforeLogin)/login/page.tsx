@@ -1,23 +1,25 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Button,
-  CircularProgress,
-  Stack,
-  TextField,
-  Typography,
-  Snackbar,
-  Alert,
-} from "@mui/material";
+import { Stack, TextField, Typography, Snackbar, Alert } from "@mui/material";
 import Link from "next/link";
 import styles from "../AuthForm.module.css"; // Import the shared CSS module
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { loginUser } from "@/services/endPoints/authUrl";
-import { setJwtInCookie } from "@/services/cookie-handler";
-import { ApiResponse } from "@/types/apiResponse"; // Ensure this import exists
+import {
+  setEmailInCookie,
+  setJwtInCookie,
+  setNameInCookie,
+} from "@/services/cookie-handler";
+import { ApiResponse } from "@/types/apiResponse";
+import {
+  ButtonType,
+  ButtonXLarge,
+  ButtonXLargeColor,
+} from "@/components/common";
 
+// Define the interface for form inputs
 interface LoginFormInputs {
   email: string;
   password: string;
@@ -38,16 +40,20 @@ const LoginPage: React.FC = () => {
 
   const router = useRouter();
 
+  // Function to handle snackbar close
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
 
+  // Function to handle login form submission
   const handleLogin: SubmitHandler<LoginFormInputs> = async (data) => {
     setLoading(true);
     try {
       const res: ApiResponse<any> = await loginUser(data);
       if (res.status) {
         setJwtInCookie(res.entity.access_token);
+        setNameInCookie(res.entity.name);
+        setEmailInCookie(res.entity.email);
         setMessage("Login successful");
         setSnackbarSeverity("success");
         setSnackbarOpen(true);
@@ -105,9 +111,12 @@ const LoginPage: React.FC = () => {
         />
       </Stack>
       <Stack className={styles.authform__actions}>
-        <Button size="medium" variant="contained" color="primary" type="submit">
-          {loading ? <CircularProgress color="inherit" size={25} /> : "Login"}
-        </Button>
+        <ButtonXLarge
+          label="Login"
+          isLoading={loading}
+          types={ButtonType.Submit}
+          colorVarient={ButtonXLargeColor.Green}
+        />
         <Typography className={styles.authform__link}>
           Don't have an account? <Link href="/signup">Create Now</Link>
         </Typography>

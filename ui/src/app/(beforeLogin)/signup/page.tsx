@@ -1,24 +1,25 @@
-// components/SignupPage.tsx
 "use client";
 
 import React, { useState } from "react";
-import {
-  Button,
-  CircularProgress,
-  Stack,
-  TextField,
-  Typography,
-  Snackbar,
-  Alert,
-} from "@mui/material";
+import { Stack, TextField, Typography, Snackbar, Alert } from "@mui/material";
 import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
 import styles from "../AuthForm.module.css"; // Import the shared CSS module
 import { registerUser } from "@/services/endPoints/authUrl";
-import { setJwtInCookie } from "@/services/cookie-handler";
+import {
+  setEmailInCookie,
+  setJwtInCookie,
+  setNameInCookie,
+} from "@/services/cookie-handler";
 import { useRouter } from "next/navigation";
 import { ApiResponse } from "@/types/apiResponse";
+import {
+  ButtonType,
+  ButtonXLarge,
+  ButtonXLargeColor,
+} from "@/components/common";
 
+// Define the interface for form inputs
 interface SignupFormInputs {
   name: string;
   email: string;
@@ -40,16 +41,20 @@ const SignupPage: React.FC = () => {
 
   const router = useRouter();
 
+  // Function to handle snackbar close
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
 
+  // Function to handle signup form submission
   const handleSignup: SubmitHandler<SignupFormInputs> = async (data) => {
     setLoading(true);
     try {
       const res: ApiResponse<any> = await registerUser(data);
       if (res.status) {
         setJwtInCookie(res.entity.access_token);
+        setNameInCookie(res.entity.name);
+        setEmailInCookie(res.entity.email);
         setMessage("Registration successful");
         setSnackbarSeverity("success");
         setSnackbarOpen(true);
@@ -114,9 +119,12 @@ const SignupPage: React.FC = () => {
         />
       </Stack>
       <Stack className={styles.authform__actions}>
-        <Button size="medium" variant="contained" color="primary" type="submit">
-          {loading ? <CircularProgress color="inherit" size={25} /> : "Signup"}
-        </Button>
+        <ButtonXLarge
+          label="Signup"
+          isLoading={loading}
+          types={ButtonType.Submit}
+          colorVarient={ButtonXLargeColor.Orange}
+        />
         <Typography className={styles.authform__link}>
           Already have an account? <Link href="/login">Login</Link>
         </Typography>

@@ -14,12 +14,13 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import { ExpendMoreIcons } from "@/components/icons";
+// import { ExpendMoreIcons } from "@/components/common/icons";
 import {
   ButtonSmall,
   ButtonType,
   ConfirmDelete,
   CreateTaskForm,
+  ExpendMoreIcons,
   SmallButtonColor,
   UpdateTaskForm,
 } from "@/components/common";
@@ -33,6 +34,7 @@ import {
   updateTaskWithId,
 } from "@/services/endPoints/TodoUrl";
 
+// Define the structure of a Task
 interface Task {
   id: number;
   name: string;
@@ -54,8 +56,9 @@ const TaskPage: React.FC = () => {
   const [updateFormDialogOpen, setUpdateFormDialogOpen] =
     useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
-  const [refresh, setrefresh] = useState(true);
+  const [refresh, setRefresh] = useState(true);
 
+  // Fetch tasks on component mount and when refresh state changes
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -82,7 +85,7 @@ const TaskPage: React.FC = () => {
     fetchTasks();
   }, [refresh]);
 
-  // for task add
+  // Handler for adding a new task
   const addTaskHandler = async (data: NewTaskDataInterface) => {
     try {
       const response = await createNewTask(data);
@@ -91,9 +94,9 @@ const TaskPage: React.FC = () => {
         setMessage("Task Added");
         setSnackbarSeverity("success");
         setSnackbarOpen(true);
-        setrefresh((i) => !i);
+        setRefresh((i) => !i);
       } else {
-        setMessage("Failed to add tasks " + response.message);
+        setMessage("Failed to add task: " + response.message);
         setSnackbarSeverity("error");
         setSnackbarOpen(true);
       }
@@ -108,7 +111,7 @@ const TaskPage: React.FC = () => {
     }
   };
 
-  // for task update
+  // Handler for updating a task
   const updateTaskHandler = async (data: {
     taskId: number;
     newTaskData: NewTaskDataInterface;
@@ -120,9 +123,9 @@ const TaskPage: React.FC = () => {
         setMessage("Task Updated");
         setSnackbarSeverity("success");
         setSnackbarOpen(true);
-        setrefresh((i) => !i);
+        setRefresh((i) => !i);
       } else {
-        setMessage("Failed to add task " + response.message);
+        setMessage("Failed to update task: " + response.message);
         setSnackbarSeverity("error");
         setSnackbarOpen(true);
       }
@@ -137,7 +140,7 @@ const TaskPage: React.FC = () => {
     }
   };
 
-  // for task update
+  // Handler for deleting a task
   const deleteTaskHandler = async (taskId: number) => {
     try {
       const response = await deleteTaskWithId(taskId);
@@ -146,9 +149,9 @@ const TaskPage: React.FC = () => {
         setMessage("Task Deleted");
         setSnackbarSeverity("success");
         setSnackbarOpen(true);
-        setrefresh((i) => !i);
+        setRefresh((i) => !i);
       } else {
-        setMessage("Failed to delete task " + response.message);
+        setMessage("Failed to delete task: " + response.message);
         setSnackbarSeverity("error");
         setSnackbarOpen(true);
       }
@@ -163,15 +166,18 @@ const TaskPage: React.FC = () => {
     }
   };
 
+  // Close the snackbar
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
 
+  // Handle accordion panel expansion
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
     };
 
+  // Close all dialogs
   const handleDialogClose = () => {
     setAddFormDialogOpen(false);
     setDeleteDialogOpen(false);
@@ -195,7 +201,9 @@ const TaskPage: React.FC = () => {
           </Stack>
           <Divider />
           {loading ? (
-            <CircularProgress />
+            <Stack direction={"row"} justifyContent={"center"}>
+              <CircularProgress sx={{ color: "teal" }} />
+            </Stack>
           ) : (
             <Stack
               sx={{
@@ -217,7 +225,6 @@ const TaskPage: React.FC = () => {
                   >
                     <Stack className={styles["task-page__accordion-summary"]}>
                       <Typography>{task.name}</Typography>
-                      {/* <Typography>{task.status}</Typography> */}
                     </Stack>
                   </AccordionSummary>
                   <AccordionDetails>
@@ -259,7 +266,7 @@ const TaskPage: React.FC = () => {
         </Stack>
       </Stack>
 
-      {/* for add task */}
+      {/* Dialog for adding a new task */}
       <Dialog
         onClose={handleDialogClose}
         aria-labelledby="customized-dialog-title"
@@ -278,7 +285,7 @@ const TaskPage: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      {/* for update the task */}
+      {/* Dialog for updating an existing task */}
       <Dialog
         onClose={handleDialogClose}
         aria-labelledby="customized-dialog-title"
@@ -299,7 +306,8 @@ const TaskPage: React.FC = () => {
           )}
         </DialogContent>
       </Dialog>
-      {/* for delete task confirmation */}
+
+      {/* Dialog for confirming task deletion */}
       <Dialog
         onClose={handleDialogClose}
         aria-labelledby="customized-dialog-title"
@@ -319,6 +327,8 @@ const TaskPage: React.FC = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Snackbar for user feedback */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}

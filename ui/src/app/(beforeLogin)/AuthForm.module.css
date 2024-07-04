@@ -1,6 +1,7 @@
 /* AuthForm.module.css */
 .authform {
-  height: 360px;
+  height: min-content;
+  min-height: 360px;
   width: 350px;
   border: 1px solid black;
   box-sizing: border-box;
@@ -22,7 +23,6 @@
   padding: 10px;
   gap: 30px;
   flex-grow: 1;
-  background-color: yellow;
   display: flex;
   flex-direction: column;
 }

@@ -1,22 +1,24 @@
 import React from "react";
-import { Button, ButtonProps } from "@mui/material";
+import { Button, ButtonProps, CircularProgress } from "@mui/material";
 import style from "./ButtonXLarge.module.css";
 import { ButtonType, ButtonXLargeColor } from "../AllButtonProps";
 
 interface ButtonXLargeProps extends ButtonProps {
+  isLoading: boolean;
   colorVarient?: ButtonXLargeColor;
   label: string;
   fullwidth?: boolean;
-  types?: ButtonType;
+  types: ButtonType;
   onClick?: (someValue: any) => void;
 }
 
 const ButtonXLarge: React.FC<ButtonXLargeProps> = React.memo(
   ({
+    isLoading = false,
     colorVarient = ButtonXLargeColor.Orange,
     label,
     fullwidth = true,
-    types = ButtonType.Submit,
+    types = ButtonType.Button,
     onClick,
     ...props
   }) => {
@@ -36,7 +38,7 @@ const ButtonXLarge: React.FC<ButtonXLargeProps> = React.memo(
         {...props}
         aria-label={label}
       >
-        {label}
+        {isLoading ? <CircularProgress color="inherit" size={25} /> : label}
       </Button>
     );
   }

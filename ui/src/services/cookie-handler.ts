@@ -11,10 +11,22 @@ export const setJwtInCookie = (token: string): void => {
   });
 };
 
-// Uncomment and convert the setNameInCookie function if needed
-// export const setNameInCookie = (userName: string): void => {
-//   Cookies.set("name", userName, {
-//     expires: new Date(Date.now() + expirationTime * 1000),
-//     path: "/",
-//   });
-// };
+export const setNameInCookie = (userName: string): void => {
+  const capitalizeFirstLetter = (name: string): string =>
+    name.charAt(0).toUpperCase() + name.slice(1);
+  Cookies.set("name", capitalizeFirstLetter(userName), {
+    path: "/",
+  });
+};
+
+export const setEmailInCookie = (userEmail: string): void => {
+  Cookies.set("email", userEmail, {
+    path: "/",
+  });
+};
+
+export const clearCookies = (): void => {
+  Cookies.remove("token");
+  Cookies.remove("name");
+  Cookies.remove("email");
+};
