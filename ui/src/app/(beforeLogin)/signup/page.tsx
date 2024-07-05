@@ -1,10 +1,10 @@
 "use client";
 
+import styles from "../AuthForm.module.css"; 
 import React, { useState } from "react";
 import { Stack, TextField, Typography, Snackbar, Alert } from "@mui/material";
 import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
-import styles from "../AuthForm.module.css"; // Import the shared CSS module
 import { registerUser } from "@/services/endPoints/authUrl";
 import {
   setEmailInCookie,

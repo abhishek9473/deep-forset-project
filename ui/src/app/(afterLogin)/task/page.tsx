@@ -1,5 +1,6 @@
 "use client";
 
+import styles from "./TaskPage.module.css";
 import React, { useEffect, useState } from "react";
 import {
   Dialog,
@@ -24,7 +25,6 @@ import {
   SmallButtonColor,
   UpdateTaskForm,
 } from "@/components/common";
-import styles from "./TaskPage.module.css";
 import { ApiResponse } from "@/types/apiResponse";
 import {
   NewTaskDataInterface,

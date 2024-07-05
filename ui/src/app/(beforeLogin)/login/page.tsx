@@ -1,9 +1,9 @@
 "use client";
 
+import styles from "../AuthForm.module.css"; 
 import React, { useState } from "react";
 import { Stack, TextField, Typography, Snackbar, Alert } from "@mui/material";
 import Link from "next/link";
-import styles from "../AuthForm.module.css"; // Import the shared CSS module
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { loginUser } from "@/services/endPoints/authUrl";
