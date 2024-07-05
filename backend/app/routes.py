@@ -28,7 +28,16 @@ def signup(user: UserCreate, db: Session = Depends(database.get_db)):
     db.commit()
     db.refresh(new_user)
     access_token = create_access_token(data={"sub": new_user.email, "uid": new_user.id})
-    return create_response(status=True, message="User created successfully", entity={"access_token": access_token, "token_type": "bearer"})
+    return create_response(
+        status=True,
+        message="User created successfully",
+        entity={
+            "access_token": access_token,
+            "token_type": "bearer",
+            "email": new_user.email,
+            "name": new_user.name
+        }
+    )
 
 @router.post("/login/", response_model=dict)
 def login(user: UserLogin, db: Session = Depends(database.get_db)):
@@ -36,7 +45,17 @@ def login(user: UserLogin, db: Session = Depends(database.get_db)):
     if not db_user or not verify_password(user.password, db_user.password):
         return create_response(status=False, message="Invalid email or password")
     access_token = create_access_token(data={"sub": db_user.email, "uid": db_user.id})
-    return create_response(status=True, message="Login successful", entity={"access_token": access_token, "token_type": "bearer"})
+    return create_response(
+        status=True,
+        message="Login successful",
+        entity={
+            "access_token": access_token,
+            "token_type": "bearer",
+            "email": db_user.email,
+            "name": db_user.name
+        }
+    )
+
 
 
 @router.post("/add_task/", response_model=dict)
