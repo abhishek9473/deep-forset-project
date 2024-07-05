@@ -25,4 +25,4 @@
 
 ---
 
-**Open http://localhost:5500/ and create a account ,and after you can use this app.**
+**Open http://localhost:5500/ and create an account. After that, you can use the app.**
