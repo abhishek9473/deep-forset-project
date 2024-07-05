@@ -42,7 +42,7 @@ export default function BeforeLayout({
         <Stack
           sx={{
             height: "300px",
-            width: "400px",
+            width: "420px",
             bgcolor: "white",
             p: 3,
             borderRadius: 2,
@@ -53,10 +53,10 @@ export default function BeforeLayout({
             Todo-App
           </Typography>
           <Typography variant="body1" gutterBottom>
-            Frontend: NextJs (14), TypeScript, MUI
+            <strong>Frontend</strong> : NextJs (14), TypeScript, MUI
           </Typography>
           <Typography variant="body1">
-            Backend: Python, FastAPI, PostgreSQL
+            <strong>Backend</strong> : Python, FastAPI, PostgreSQL, SQLAlchemy
           </Typography>
         </Stack>
       </Stack>
