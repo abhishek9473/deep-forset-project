@@ -5,12 +5,9 @@
 }
 
 .task-page__container {
-  /* max-height: 400px; */
   border: 1.2px solid gray;
   border-radius: 10px !important;
   padding-bottom: 10px;
-  /* overflow-y: scroll; */
-  /* scrollbar-width: none; */
 }
 
 .task-page__header {
